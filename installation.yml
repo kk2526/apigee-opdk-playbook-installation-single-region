@@ -1,4 +1,26 @@
 ---
+#- hosts: planet
+#  gather_facts: no
+#  strategy: free
+#  tasks:
+#  - block:
+#    - debug:
+#        msg: Checking that server ({{ ansible_host }}) is available
+#
+#    - name: Waiting for servers to be available...
+#      become: no
+#      local_action: wait_for host='{{ ansible_host }}' port={{ ansible_port }} state=started delay=60 timeout='{{ server_restart_timeout | d(720) }}'
+#  tags:
+#  - cache
+#  - os-pre-req
+#  - apigee-pre-req
+#  - dc-1
+#  - dc-2
+#  - apigee-logs
+#  - logs
+#  - os-logs
+#  - ds
+
 - include: configuration/update_cache.yml
   tags:
   - cache
@@ -34,7 +56,7 @@
 
 - include: components/opdk-pre-requisites.yml
   vars:
-    hosts: 'dc-1-ds'
+    hosts: 'planet'
     jdk_version: '1.8'
   tags:
   - apigee-pre-req
