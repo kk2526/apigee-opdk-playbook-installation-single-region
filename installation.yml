@@ -146,5 +146,45 @@
   - status
 
 - include: validations/opdk-setup-log-files.yml
+  vars:
+    hosts: dc-1-ds
   tags:
   - logs
+  - dc-1
+
+- include: validations/opdk-setup-log-files.yml
+  vars:
+    hosts: dc-1-ms
+  tags:
+  - logs
+  - dc-1
+
+- include: validations/opdk-setup-log-files.yml
+  vars:
+    hosts: dc-1-rmp
+  tags:
+  - logs
+  - dc-1
+
+- include: validations/opdk-setup-log-files.yml
+  vars:
+    hosts: dc-1-qpid
+  tags:
+  - logs
+  - dc-1
+
+- include: validations/opdk-setup-log-files.yml
+  vars:
+    hosts: dc-1-pgmaster
+  tags:
+  - logs
+  - dc-1
+
+- include: validations/opdk-setup-log-files.yml
+  vars:
+    hosts: dc-1-pgstandby
+  tags:
+  - logs
+  - dc-1
+
+
