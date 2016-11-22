@@ -76,3 +76,6 @@
 - src: https://github.com/carlosfrias/apigee-opdk-backup
 
 - src: https://github.com/carlosfrias/apigee-opdk-restore
+
+- src: https://github.com/carlosfrias/apigee-opdk-server-self.git
+
