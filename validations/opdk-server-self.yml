@@ -3,8 +3,6 @@
   serial: 1
   vars_files:
   - ~/.apigee/credentials.yml
-  roles:
-  - apigee-opdk-setup-default-settings
   tasks:
   - name: Obtain management server self report
     ignore_errors: yes
