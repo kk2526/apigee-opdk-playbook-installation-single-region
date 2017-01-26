@@ -27,7 +27,12 @@
   tags:
   - apigee-component
 
-- include: 'opdk-setup-postgres-{{ pg_component }}.yml'
-  when: pg_component is defined
+- include: 'opdk-setup-postgres-master.yml'
+  when: pg_component is defined and pg_component == 'master'
+  tags:
+  - apigee-component
+
+- include: 'opdk-setup-postgres-standby.yml'
+  when: pg_component is defined and pg_component == 'standby'
   tags:
   - apigee-component
