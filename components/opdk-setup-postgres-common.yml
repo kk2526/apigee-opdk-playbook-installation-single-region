@@ -5,7 +5,6 @@
   - ~/.apigee/credentials.yml
   roles:
   - apigee-opdk-enable-swap
-  - apigee-opdk-setup-default-settings
   - apigee-opdk-setup-os-postgres
   tags:
   - os-pre-req
@@ -15,7 +14,6 @@
   vars_files:
   - ~/.apigee/credentials.yml
   roles:
-  - apigee-opdk-setup-default-settings
   - apigee-opdk-setup-postgres-config
   tags:
   - apigee-pre-req

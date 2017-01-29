@@ -90,12 +90,6 @@
   tags:
   - pgstandby
 
-- include: configuration/opdk-setup-org-config.yml
-  vars:
-    hosts: 'dc-1-ms'
-  tags:
-  - org
-
 - include: configuration/opdk-setup-org.yml
   vars:
     hosts: 'dc-1-ms'
