@@ -9,6 +9,7 @@
   - qpid
   - rmp
   - pg
+  - analytics
   - pgmaster
   - pgstandby
 
@@ -75,20 +76,25 @@
     component_profile: 'qs'
   tags:
   - qpid
+  - analytics
 
 - include: components/opdk-setup-postgres-common.yml
   vars:
     hosts: 'dc-1-pgmaster'
     pg_component: 'master'
   tags:
+  - pg
   - pgmaster
+  - analytics
 
 - include: components/opdk-setup-postgres-common.yml
   vars:
     hosts: 'dc-1-pgstandby'
     pg_component: 'standby'
   tags:
+  - pg
   - pgstandby
+  - analytics
 
 - include: configuration/opdk-setup-org.yml
   vars:
