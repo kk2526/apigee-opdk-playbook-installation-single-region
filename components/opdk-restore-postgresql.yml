@@ -4,6 +4,7 @@
   vars_files:
   - ~/.apigee/credentials.yml
   roles:
+  - apigee-opdk-setup-default-settings
   - { role: apigee-opdk-stop-components, component_name: '{{ ms_server }}' }
 
 - hosts: '{{ hosts_qpid }}'
@@ -11,6 +12,7 @@
   vars_files:
   - ~/.apigee/credentials.yml
   roles:
+  - apigee-opdk-setup-default-settings
   - { role: apigee-opdk-stop-components, component_name: '{{ qpid_server }}' }
 
 - hosts: '{{ hosts_ps }}'
@@ -18,6 +20,7 @@
   vars_files:
   - ~/.apigee/credentials.yml
   roles:
+  - apigee-opdk-setup-default-settings
   - { role: apigee-opdk-stop-components, component_name: '{{ ps_server }}' }
 
 - hosts: '{{ hosts }}'
@@ -25,6 +28,7 @@
   vars_files:
   - ~/.apigee/credentials.yml
   roles:
+  - apigee-opdk-setup-default-settings
   - { role: apigee-opdk-restore, component_name: '{{ component }}', backup_time: '{{ backup }}' }
 
 - hosts: '{{ hosts_ms }}'
@@ -32,6 +36,7 @@
   vars_files:
   - ~/.apigee/credentials.yml
   roles:
+  - apigee-opdk-setup-default-settings
   - { role: apigee-opdk-start-components, component_name: '{{ ms_server }}' }
 
 - hosts: '{{ hosts_qpid }}'
@@ -39,6 +44,7 @@
   vars_files:
   - ~/.apigee/credentials.yml
   roles:
+  - apigee-opdk-setup-default-settings
   - { role: apigee-opdk-start-components, component_name: '{{ qpid_server }}' }
 
 - hosts: '{{ hosts_ps }}'
@@ -46,4 +52,5 @@
   vars_files:
   - ~/.apigee/credentials.yml
   roles:
+  - apigee-opdk-setup-default-settings
   - { role: apigee-opdk-start-components, component_name: '{{ ps_server }}' }

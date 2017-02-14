@@ -15,6 +15,7 @@
   - ~/.apigee/credentials.yml
   serial: 1
   roles:
+  - apigee-opdk-setup-default-settings
   - apigee-opdk-setup-validate-cleanup
   tags:
   - validate

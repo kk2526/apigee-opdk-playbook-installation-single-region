@@ -5,4 +5,5 @@
   strategy: free
   roles:
   - apigee-opdk-setup-org-config
+  - apigee-opdk-setup-org-config
 
