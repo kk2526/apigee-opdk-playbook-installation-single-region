@@ -48,6 +48,7 @@
   - pg
   - pgmaster
   - pgstandby
+  - analytics
 
 - include: components/opdk-install-component.yml
   vars:
