@@ -13,7 +13,6 @@
   - name: Load credentials from file
     include_vars: '~/.apigee/credentials.yml'
   roles:
-  - apigee-opdk-setup-default-settings
   - apigee-opdk-setup-os-minimum
   - apigee-opdk-setup-selinux-disable
   - apigee-opdk-shutdown-iptables

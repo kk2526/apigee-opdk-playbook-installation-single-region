@@ -4,6 +4,5 @@
   - ~/.apigee/credentials.yml
   strategy: free
   roles:
-  - apigee-opdk-setup-default-settings
   - apigee-opdk-setup-org-config
 

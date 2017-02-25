@@ -1,5 +1,6 @@
 ---
-- include: configuration/update_cache.yml
+- name: Update the ansible cache
+  include: configuration/update_cache.yml
   tags:
   - cache
   - os-pre-req

@@ -20,8 +20,6 @@
   vars_files:
   - ~/.apigee/credentials.yml
   serial: 1
-  roles:
-  - apigee-opdk-setup-default-settings
   tasks:
   - name: Obtain router server self report
     ignore_errors: yes
@@ -51,8 +49,6 @@
   serial: 1
   vars_files:
   - ~/.apigee/credentials.yml
-  roles:
-  - apigee-opdk-setup-default-settings
   tasks:
   - name: Obtain qpid server self report
     ignore_errors: yes
@@ -70,8 +66,6 @@
   serial: 1
   vars_files:
   - ~/.apigee/credentials.yml
-  roles:
-  - apigee-opdk-setup-default-settings
   tasks:
   - name: Obtain postgres server self report
     ignore_errors: yes
