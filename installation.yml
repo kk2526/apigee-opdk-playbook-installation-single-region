@@ -1,26 +1,8 @@
 ---
-#- name: Wait for servers for a minute if they are not ready
-#  tags: ['wait']
-#  hosts: planet
-#
-#  tasks:
-#  - name: Waiting for server to start
-#    become: no
-#    local_action: wait_for host={{ ansible_host }} port={{ ansible_ssh_port }} state=started
-
-
 - name: Update the ansible cache
   include: configuration/update_cache.yml
   tags:
   - cache
-
-- include: configuration/load-opdk-credentials.yml
-  vars:
-    hosts: 'planet'
-  tags:
-  - credentials
-  - os-pre-req
-  - apigee-pre-req
 
 - include: configuration/opdk-setup-os.yml
   vars:
@@ -42,14 +24,6 @@
     jdk_version: '1.8'
   tags:
   - apigee-pre-req
-  - ms
-  - ds
-  - qpid
-  - rmp
-  - pg
-  - pgmaster
-  - pgstandby
-  - analytics
 
 - include: components/opdk-install-component.yml
   vars:
