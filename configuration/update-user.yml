@@ -9,11 +9,11 @@
   - ~/.apigee/credentials.yml
 
   tasks:
-  - name: Build EC2 facts cache
-    ec2_facts:
-
   - name: Build setup facts cache
     setup:
+
+  - name: Build EC2 facts cache
+    ec2_facts:
 
   - name: Copy local public keys to server for user {{ user }}
     authorized_key:
