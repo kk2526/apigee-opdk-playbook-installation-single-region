@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   connection: local
+
   tasks:
   - name: Clean files
     async: 0
@@ -13,8 +14,6 @@
     - '~/.ansible/tmp/cache'
     - '~/.ansible/tmp/ansible.log'
     - '~/.apigee/ssh_keys'
-    - '~/.apigee/logs'
-    - '~/.apigee/configs'
     - '~/.apigee/logs_configs'
 
 
