@@ -7,49 +7,56 @@
   roles:
   - apigee-opdk-setup-default-settings
 
-- include: configuration/opdk-setup-os.yml
+- name: Setup OS
+  include: configuration/opdk-setup-os.yml
   vars:
     hosts: 'planet'
   tags:
   - os
   - os-pre-req
 
-- include: configuration/update-user.yml
+- name: Update user with root privilege
+  include: configuration/update-user.yml
   vars:
     hosts: 'planet'
     user: 'root'
   tags:
   - root-user
 
-- include: components/opdk-pre-requisites.yml
+- name: Setup Edge pre-requisites
+  include: components/opdk-pre-requisites.yml
   vars:
     hosts: 'planet'
     jdk_version: '1.8'
   tags:
   - apigee-pre-req
 
-- include: components/opdk-install-component.yml
+- name: Setup Cassandra & Zookeeper in DC-1
+  include: components/opdk-install-component.yml
   vars:
     hosts: 'dc-1-ds'
     component_profile: 'ds'
   tags:
   - ds
 
-- include: components/opdk-install-component.yml
+- name: Setup Management Server on DC-1
+  include: components/opdk-install-component.yml
   vars:
     hosts: 'dc-1-ms'
     component_profile: 'ms'
   tags:
   - ms
 
-- include: components/opdk-install-component.yml
+- name: Setup RMP on DC-1
+  include: components/opdk-install-component.yml
   vars:
     hosts: 'dc-1-rmp'
     component_profile: 'rmp'
   tags:
   - rmp
 
-- include: components/opdk-install-component.yml
+- name: Setup Qpid on DC-1
+  include: components/opdk-install-component.yml
   vars:
     hosts: 'dc-1-qpid'
     component_profile: 'qs'
@@ -57,7 +64,8 @@
   - qpid
   - analytics
 
-- include: components/opdk-setup-postgres-common.yml
+- name: Setup Postgres Master on DC-1
+  include: components/opdk-setup-postgres-common.yml
   vars:
     hosts: 'dc-1-pgmaster'
     pg_component: 'master'
@@ -66,7 +74,8 @@
   - pgmaster
   - analytics
 
-- include: components/opdk-setup-postgres-common.yml
+- name: Setup Postgres Standby on DC-1
+  include: components/opdk-setup-postgres-common.yml
   vars:
     hosts: 'dc-1-pgstandby'
     pg_component: 'standby'
@@ -75,50 +84,58 @@
   - pgstandby
   - analytics
 
-- include: configuration/opdk-setup-org.yml
+- name: Setup org on DC-1
+  include: configuration/opdk-setup-org.yml
   vars:
     hosts: 'dc-1-ms'
   tags:
   - org
 
-- include: validations/opdk-setup-validate.yml
+- name: Validate RMP proxy functionality on DC-1
+  include: validations/opdk-setup-validate.yml
   vars:
     hosts: 'dc-1-rmp'
   tags:
   - validation
 
-- include: validations/opdk-internal-port-connectivity-validator.yml
+- name: Validate internal port connectivity
+  include: validations/opdk-internal-port-connectivity-validator.yml
   tags:
   - port-validator
 
-- include: validations/opdk-setup-status.yml
+- name: Report status for all nodes
+  include: validations/opdk-setup-status.yml
   vars:
     hosts: 'planet'
   tags:
   - status
 
-- include: validations/opdk-setup-log-files.yml
+- name: Download logs and configs from DC-1-DS
+  include: validations/opdk-setup-log-files.yml
   vars:
     hosts: dc-1-ds
   tags:
   - logs
   - dc-1
 
-- include: validations/opdk-setup-log-files.yml
+- name: Download logs and configs from DC-1-MS
+  include: validations/opdk-setup-log-files.yml
   vars:
     hosts: dc-1-ms
   tags:
   - logs
   - dc-1
 
-- include: validations/opdk-setup-log-files.yml
+- name: Download logs and configs from DC-1-RMP
+  include: validations/opdk-setup-log-files.yml
   vars:
     hosts: dc-1-rmp
   tags:
   - logs
   - dc-1
 
-- include: validations/opdk-setup-log-files.yml
+- name: Download logs and configs from DC-1-QPID
+  include: validations/opdk-setup-log-files.yml
   vars:
     hosts: dc-1-qpid
   tags:
@@ -126,14 +143,16 @@
   - dc-1
   - qpid
 
-- include: validations/opdk-setup-log-files.yml
+- name: Download logs and configs from DC-1-PGMASTER
+  include: validations/opdk-setup-log-files.yml
   vars:
     hosts: dc-1-pgmaster
   tags:
   - logs
   - dc-1
 
-- include: validations/opdk-setup-log-files.yml
+- name: Download logs and configs from DC-1-PGSTANDBY
+  include: validations/opdk-setup-log-files.yml
   vars:
     hosts: dc-1-pgstandby
   tags:
