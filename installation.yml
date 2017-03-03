@@ -1,8 +1,11 @@
 ---
 - name: Update the ansible cache
-  include: configuration/update_cache.yml
-  tags:
-  - cache
+  hosts: planet
+  tags: ['cache']
+  vars_files:
+  - ~/.apigee/credentials.yml
+  roles:
+  - apigee-opdk-setup-default-settings
 
 - include: configuration/opdk-setup-os.yml
   vars:

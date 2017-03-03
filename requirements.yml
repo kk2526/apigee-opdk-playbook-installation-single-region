@@ -80,3 +80,5 @@
 - src: https://github.com/carlosfrias/apigee-opdk-server-self.git
 
 - src: https://github.com/carlosfrias/apigee-opdk-aws-setup.git
+
+- src: https://github.com/carlosfrias/apigee-opdk-cache-update.git
