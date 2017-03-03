@@ -73,7 +73,7 @@
 
 - src: https://github.com/carlosfrias/apigee-opdk-stop-components
 
-- src: https://github.com/carlosfrias/apigee-opdk-backup
+- src: https://github.com/carlosfrias/apigee-opdk-backup.git
 
 - src: https://github.com/carlosfrias/apigee-opdk-restore
 
