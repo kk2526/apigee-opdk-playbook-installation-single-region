@@ -1,29 +1,12 @@
 ---
 - hosts: '{{ hosts }}'
-  strategy: free
-  vars_files:
-  - ~/.apigee/credentials.yml
+  serial: 1
   roles:
-  - apigee-opdk-enable-swap
-  - apigee-opdk-setup-os-postgres
-  tags:
-  - os-pre-req
-
-- hosts: '{{ hosts }}'
-  strategy: free
-  vars_files:
-  - ~/.apigee/credentials.yml
-  roles:
-  - apigee-opdk-setup-postgres-config
-  tags:
-  - apigee-pre-req
-
-- include: opdk-install-component.yml
-  vars:
-    hosts: '{{ hosts }}'
-    component_profile: 'ps'
-  tags:
-  - apigee-component
+  - { role: apigee-opdk-enable-swap, tags: ['os-pre-req'] }
+  - { role: apigee-opdk-setup-os-postgres, tags: ['os-pre-req'] }
+  - { role: apigee-opdk-setup-postgres-config, tags: ['apigee-pre-req'] }
+  - { role: apigee-opdk-setup-component-installer, tags: ['apigee-component'] }
+  - { role: apigee-opdk-setup-component, tags: ['apigee-component'], profile: 'ps' }
 
 - include: 'opdk-setup-postgres-master.yml'
   when: pg_component is defined and pg_component == 'master'
