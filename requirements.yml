@@ -15,6 +15,8 @@
 
 - src: https://github.com/carlosfrias/apigee-opdk-setup-openjdk
 
+- src: https://github.com/carlosfrias/apigee-opdk-setup-java-home
+
 - src: https://github.com/carlosfrias/apigee-opdk-setup-bootstrap
 
 - src: https://github.com/carlosfrias/apigee-opdk-setup-silent-installation-config
