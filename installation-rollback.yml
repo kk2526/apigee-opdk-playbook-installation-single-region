@@ -4,4 +4,4 @@
   vars:
     remove_apigee: false
   roles:
-  - apigee-opdk-setup-bootstrap-rollback
+  - { role: apigee-opdk-setup-bootstrap-rollback }

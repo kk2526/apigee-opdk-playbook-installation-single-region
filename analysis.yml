@@ -1,0 +1,45 @@
+---
+- name: Show Zookeeper Leader
+  hosts: '{{ hosts }}'
+  tags: ['leader']
+  serial: 1
+  tasks:
+  - name: Display Zookeeper Leadership
+    shell: "echo srvr | nc localhost 2181 | grep Mode:"
+
+- name: Show Cassandra Ring
+  hosts: '{{ hosts }}'
+  tags: ['ring']
+  serial: 1
+  tasks:
+  - name: Display Cassandra Ring
+    shell: "{{ nodetool }} ring"
+
+- name: Show Cassandra Status
+  hosts: '{{ hosts }}'
+  tags: ['status']
+  serial: 1
+  tasks:
+  - name: Display Cassandra Ring
+    shell: "{{ nodetool }} status"
+
+- name: Show Cassandra Replication Factor
+  hosts: '{{ hosts }}'
+  tags: ['replication']
+  tasks:
+  - name: Display Cassandra Replication Factor
+    shell: "{{ cqlsh }} -e 'select * from system.schema_keyspaces' {{ local_address}}"
+
+- name: Show Postgres Master Check
+  hosts: '{{ hosts }}'
+  tags: ['master']
+  tasks:
+  - name: Display Postgres Master Status Check
+    shell: "{{ apigee_service }} apigee-postgresql postgres-check-master"
+
+- name: Show Postgres Standby Check
+  hosts: '{{ hosts }}'
+  tags: ['standby']
+  tasks:
+  - name: Display Postgres Standby Status Check
+    shell: "{{ apigee_service }} apigee-postgresql postgres-check-standby"

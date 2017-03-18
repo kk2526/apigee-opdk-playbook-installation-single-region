@@ -1,5 +1,6 @@
 ---
 - hosts: '{{ hosts }}'
+  gather_facts: no
   become: true
   strategy: free
   vars:
@@ -35,5 +36,6 @@
     - { dir: '{{ apigee_installation_home }}/apigee-zookeeper/', pattern: '*yml' }
     - { dir: '{{ apigee_installation_home }}/apigee-zookeeper/', pattern: '*yaml' }
     - { dir: '{{ apigee_installation_home }}/apigee-zookeeper/', pattern: '*properties' }
+    - { dir: '{{ apigee_installation_home }}/apigee-postgresql/', pattern: '*conf' }
   roles:
   - { role: apigee-fetch-files, download_pattern: '{{ pattern }}', download_folder: "~/.apigee/logs_configs/{{ hosts }}/" }
