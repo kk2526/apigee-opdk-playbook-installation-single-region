@@ -18,6 +18,16 @@
   - { role: apigee-opdk-setup-os-common }
   - { role: apigee-opdk-setup-openjdk, tags: ['openjdk'], jdk_version: '1.8' }
 
+- name: Install Postgres on DC-1
+  hosts: dc-1-pg
+  gather_facts: no
+  serial: 1
+  tags: ['os-pre-req']
+  roles:
+  - { role: apigee-opdk-enable-swap }
+  - { role: apigee-opdk-setup-os-postgres }
+  - { role: apigee-opdk-setup-postgres-config }
+
 - name: Update apigee-pre-req for the planet
   hosts: planet
   gather_facts: no
@@ -73,16 +83,6 @@
   - { role: apigee-opdk-start-components, tags: ['apigee-component'] }
   - { role: apigee-opdk-server-self, server_types: ['qs'] }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
-
-- name: Install Postgres on DC-1
-  hosts: dc-1-pg
-  gather_facts: no
-  serial: 1
-  tags: ['os-pre-req']
-  roles:
-  - { role: apigee-opdk-enable-swap }
-  - { role: apigee-opdk-setup-os-postgres }
-  - { role: apigee-opdk-setup-postgres-config }
 
 - name: Install Postgres on DC-1
   hosts: dc-1-pg
