@@ -21,10 +21,10 @@
   - { role: apigee-opdk-setup-openjdk, tags: ['openjdk'], jdk_version: '1.8' }
   - { role: apigee-opdk-setup-java-home, tags: ['java_home'] }
   - { role: apigee-opdk-setup-bootstrap, tags: ['apigee-bootstrap'] }
-  - { role: apigee-opdk-setup-silent-installation-config, tags: ['apigee-silent-config'] }
+  - { role: apigee-opdk-setup-silent-installation-config, tags: ['apigee-silent-config'], opdk_ldap_type: '2' }
 
-- name: Configure Cassandra & Zookeeper in DC-1
-  hosts: dc-1-ds
+- name: Configure Cassandra & Zookeeper on the entire planet DC-1
+  hosts: ds
   gather_facts: no
   serial: 1
   tags: ['ds']
@@ -43,47 +43,72 @@
   - { role: apigee-opdk-setup-component-installer, tags: ['apigee-component', 'installer'] }
   - { role: apigee-opdk-setup-component, profile: 'ms',tags: ['apigee-component']  }
   - { role: apigee-opdk-setup-component, profile: 'ui',tags: ['apigee-component']  }
-  - { role: apigee-opdk-start-components, tags: ['apigee-component'] }
+  - { role: apigee-opdk-cassandra-client-update, tags: ['apigee-component', 'client'] }
   - { role: apigee-opdk-server-self, server_types: ['ms'] }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
-- name: Setup RMP on DC-1
-  hosts: dc-1-rmp
+- name: Configure Management Server on DC-2
+  hosts: dc-2-ms
+  serial: 1
+  gather_facts: no
+  tags: ['ms']
+  roles:
+  - { role: apigee-opdk-setup-component-installer, tags: ['apigee-component', 'installer'] }
+  - { role: apigee-opdk-setup-component, profile: 'ms',tags: ['apigee-component']  }
+  - { role: apigee-opdk-setup-component, profile: 'ui',tags: ['apigee-component']  }
+  - { role: apigee-opdk-cassandra-client-update, tags: ['apigee-component', 'client'] }
+  - { role: apigee-opdk-server-self, server_types: ['ms'] }
+  - { role: apigee-opdk-setup-status, tags: ['status'] }
+
+- name: Rebuild Cassandra
+  hosts: dc-2-ds
+  serial: 1
+  gather_facts: no
+  tags: ['ms', 'rebuild']
+  roles:
+  - { role: apigee-opdk-cassandra-rebuild, opdk_region: 'dc-1' }
+
+- name: Setup RMP on entire planet
+  hosts: rmp
   gather_facts: no
   tags: ['rmp']
   roles:
   - { role: apigee-opdk-setup-component-installer, tags: ['apigee-component', 'installer'] }
-  - { role: apigee-opdk-setup-component, profile: 'rmp',tags: ['apigee-component']  }
-  - { role: apigee-opdk-start-components, tags: ['apigee-component'] }
+  - { role: apigee-opdk-setup-component, profile: 'rmp', tags: ['apigee-component']  }
   - { role: apigee-opdk-server-self, server_types: ['router', 'mp'] }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
 - name: Setup Qpid on DC-1
-  hosts: dc-1-qpid
+  hosts: qpid
   gather_facts: no
   tags: ['qpid']
   roles:
   - { role: apigee-opdk-setup-component-installer, tags: ['apigee-component', 'installer'] }
-  - { role: apigee-opdk-setup-component, profile: 'qs',tags: ['apigee-component']  }
-  - { role: apigee-opdk-start-components, tags: ['apigee-component'] }
+  - { role: apigee-opdk-setup-component, profile: 'qs', tags: ['apigee-component']  }
   - { role: apigee-opdk-server-self, server_types: ['qs'] }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
 - name: Install Postgres on DC-1
-  hosts: dc-1-pg
+  hosts: pg
+  gather_facts: no
+  serial: 1
+  tags: ['os-pre-req']
+  roles:
+  - { role: apigee-opdk-enable-swap }
+  - { role: apigee-opdk-setup-os-postgres }
+  - { role: apigee-opdk-setup-postgres-config }
+
+- name: Install Postgres on DC-1
+  hosts: pg
   gather_facts: no
   serial: 1
   tags: ['pg', 'pgcommon']
   roles:
-  - { role: apigee-opdk-enable-swap, tags: ['os-pre-req'] }
-  - { role: apigee-opdk-setup-os-postgres, tags: ['os-pre-req'] }
-  - { role: apigee-opdk-setup-postgres-config, tags: ['os-pre-req'] }
   - { role: apigee-opdk-setup-component-installer, tags: ['apigee-component', 'installer'] }
-  - { role: apigee-opdk-setup-component, profile: 'ps',tags: ['apigee-component'] }
-  - { role: apigee-opdk-start-components, tags: ['apigee-component'] }
+  - { role: apigee-opdk-setup-component, profile: 'ps', tags: ['apigee-component'] }
 
 - name: Configure Postgres Master on DC-1
-  hosts: dc-1-pgmaster
+  hosts: pgmaster
   gather_facts: no
   serial: 1
   tags: ['pg','pgmaster']
@@ -93,7 +118,7 @@
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
 - name: Configure Postgres Standby on DC-1
-  hosts: dc-1-pgstandby
+  hosts: pgstandby
   gather_facts: no
   serial: 1
   tags: ['pg', 'pgstandby']
@@ -102,8 +127,18 @@
   - { role: apigee-opdk-setup-postgres-standby }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
+- name: Register Postgres on DC-2
+  hosts: dc-2-pgmaster
+  gather_facts: no
+  serial: 1
+  tags: ['pg','pgregister']
+  roles:
+  - { role: apigee-opdk-server-self, server_types: ['ps'] }
+  - { role: apigee-opdk-setup-postgresql-add, pgmaster_group_name: 'dc-2-pgmaster', pgstandby_group_name: 'dc-2-pgstandby' }
+  - { role: apigee-opdk-setup-status, tags: ['status'] }
+
 - name: Configure org on DC-1
-  hosts: dc-1-ms
+  hosts: ms
   gather_facts: no
   tags: ['org']
   serial: 1
@@ -112,7 +147,7 @@
   - apigee-opdk-setup-org
 
 - name: Validate RMP proxy functionality on DC-1
-  hosts: dc-1-rmp
+  hosts: rmp
   serial: 1
   gather_facts: no
   tags: ['validate']

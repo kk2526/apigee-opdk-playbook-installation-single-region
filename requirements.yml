@@ -100,3 +100,5 @@
 - src: https://github.com/carlosfrias/apigee-opdk-setup-qpid-add.git
 
 - src: https://github.com/carlosfrias/apigee-opdk-setup-postgresql-add.git
+
+- src: https://github.com/carlosfrias/apigee-server-restart

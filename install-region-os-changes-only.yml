@@ -1,0 +1,28 @@
+---
+- name: Update nodes with OS pre-requisites
+  hosts: planet
+  gather_facts: no
+  tags: ['os-pre-req']
+  vars_files:
+  - ~/.apigee/credentials.yml
+  roles:
+  - { role: apigee-opdk-setup-default-settings, tags: ['cache'] }
+  - { role: apigee-opdk-ssh-user, tags: ['root'], user: 'root' }
+  - { role: apigee-opdk-setup-os-minimum }
+  - { role: apigee-opdk-setup-apigee-user}
+  - { role: apigee-opdk-setup-os-limits, tags: ['apigee-tuning'] }
+  - { role: apigee-opdk-setup-selinux-disable }
+  - { role: apigee-opdk-shutdown-iptables }
+  - { role: apigee-server-restart, tags: ['restart-server'], when: (selinux_disabled is defined and not selinux_disabled) or (iptables_disabled is defined and not iptables_disabled) }
+  - { role: apigee-opdk-setup-os-common }
+  - { role: apigee-opdk-setup-openjdk, tags: ['openjdk'], jdk_version: '1.8' }
+
+- name: Install Postgres on DC-1
+  hosts: dc-1-pg
+  gather_facts: no
+  serial: 1
+  tags: ['pg', 'pgcommon']
+  roles:
+  - { role: apigee-opdk-enable-swap, tags: ['os-pre-req'] }
+  - { role: apigee-opdk-setup-os-postgres, tags: ['os-pre-req'] }
+  - { role: apigee-opdk-setup-postgres-config, tags: ['os-pre-req'] }
