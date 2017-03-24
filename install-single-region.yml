@@ -21,7 +21,6 @@
 - name: Install Postgres on DC-1
   hosts: dc-1-pg
   gather_facts: no
-  serial: 1
   tags: ['os-pre-req']
   roles:
   - { role: apigee-opdk-enable-swap }

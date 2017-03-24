@@ -121,6 +121,7 @@
 
 - name: Install Postgres on DC-2
   hosts: dc-2-pg
+  serial: 1
   gather_facts: no
   tags: ['pg']
   roles:
