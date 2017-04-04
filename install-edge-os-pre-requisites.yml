@@ -1,12 +1,18 @@
 ---
-- name: Update nodes with OS pre-requisites
+- name: Update nodes with common OS pre-requisites
   hosts: planet
   gather_facts: no
   tags: ['os-pre-req']
-  vars_files:
-  - ~/.apigee/credentials.yml
+  pre_tasks:
+  - name: Wait until the node is available
+    become: no
+    delegate_to: 127.0.0.1
+    wait_for:
+      host: '{{ ansible_host }}'
+      state: started
+      delay: "{{ start_check_delay | d(15) }}"
+      timeout: '{{ server_restart_timeout | d(45) }}'
   roles:
-  - { role: apigee-opdk-setup-default-settings, tags: ['cache'] }
   - { role: apigee-opdk-ssh-user, tags: ['root'], user: 'root' }
   - { role: apigee-opdk-setup-os-minimum }
   - { role: apigee-opdk-setup-apigee-user}
@@ -17,11 +23,10 @@
   - { role: apigee-opdk-setup-os-common }
   - { role: apigee-opdk-setup-openjdk, tags: ['openjdk'], jdk_version: '1.8' }
 
-- name: Install Postgres on DC-1
-  hosts: dc-1-pg
+- name: Update Postgres nodes with OS pre-requisites
+  hosts: pg
   gather_facts: no
-  serial: 1
-  tags: ['pg', 'pgcommon']
+  tags: ['os-pre-req', 'pg-os-pre-req']
   roles:
   - { role: apigee-opdk-enable-swap, tags: ['os-pre-req'] }
   - { role: apigee-opdk-setup-os-postgres, tags: ['os-pre-req'] }

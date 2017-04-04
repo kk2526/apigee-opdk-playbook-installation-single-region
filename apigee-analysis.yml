@@ -1,0 +1,137 @@
+---
+- name: Show Zookeeper Leader
+  hosts: ds
+  tags: ['zk_leader']
+  serial: 1
+  tasks:
+  - name: Display Zookeeper Leadership
+    shell: "echo srvr | nc localhost 2181 | grep Mode:"
+
+- name: Show Zookeeper Status
+  hosts: ds
+  tags: ['zk_status']
+  serial: 1
+  tasks:
+  - name: Display Zookeeper Leadership
+    shell: "echo srvr | nc localhost 2181"
+
+- name: Show Cassandra Ring
+  hosts: ds
+  tags: ['cs_ring']
+  serial: 1
+  tasks:
+  - name: Display Cassandra Ring
+    shell: "{{ nodetool }} ring"
+
+- name: Show Cassandra Status
+  hosts: ds
+  tags: ['cs_status']
+  serial: 1
+  tasks:
+  - name: Display Cassandra Ring
+    shell: "{{ nodetool }} status"
+
+- name: Show Cassandra Replication Factor
+  hosts: ds
+  tags: ['cs_replication']
+  tasks:
+  - name: Display Cassandra Replication Factor
+    shell: "{{ cqlsh }} -e 'select * from system.schema_keyspaces' {{ local_address}}"
+
+- name: Show Postgres Master Check
+  hosts: pgmaster
+  tags: ['pg_master']
+  tasks:
+  - name: Display Postgres Master Status Check
+    shell: "{{ apigee_service }} apigee-postgresql postgres-check-master"
+
+- name: Show Postgres Standby Check
+  hosts: pgstandby
+  tags: ['pg_standby']
+  tasks:
+  - name: Display Postgres Standby Status Check
+    shell: "{{ apigee_service }} apigee-postgresql postgres-check-standby"
+
+- name: Show Node Status
+  hosts: planet
+  tags: ['node_status']
+  serial: 1
+  tasks:
+  - name: Display Node Status
+    shell: "{{ apigee_all }} status"
+
+- name: Start Node
+  hosts: planet
+  tags: ['node_start']
+  serial: 1
+  tasks:
+  - name: Start Node
+    shell: "{{ apigee_all }} start"
+
+- name: Stop Node
+  hosts: planet
+  tags: ['node_stop']
+  serial: 1
+  tasks:
+  - name: Stop Node
+    shell: "{{ apigee_all }} stop"
+
+- name: Component versions
+  hosts: planet
+  tags: ['node_version']
+  serial: 1
+  tasks:
+  - name: Component versions
+    shell: "{{ apigee_all }} version"
+
+- name: Management server self report
+  hosts: ms
+  tags: ['ms_self']
+  serial: 1
+  tasks:
+  - name: Display self report
+    debug:
+      var: edge_ms_self
+
+- name: Router self report
+  hosts: rmp
+  tags: ['r_self']
+  serial: 1
+  tasks:
+  - name: Display self report
+    debug:
+      var: edge_router_self
+
+- name: Message Processor self report
+  hosts: rmp
+  tags: ['mp_self']
+  serial: 1
+  tasks:
+  - name: Display self report
+    debug:
+      var: edge_mp_self
+
+- name: Qpid self report
+  hosts: qpid
+  tags: ['qpid_self']
+  serial: 1
+  tasks:
+  - name: Display self report
+    debug:
+      var: edge_qs_self
+
+- name: Postgres server self report
+  hosts: pg
+  tags: ['ps_self']
+  serial: 1
+  tasks:
+  - name: Display self report
+    debug:
+      var: edge_ps_self
+
+- name: Display silent-install.conf
+  hosts: planet
+  tags: ['show-silent-install']
+  tasks:
+  - name: Display silent-install.conf
+    command: "cat {{ opdk_installation_config_file }}"

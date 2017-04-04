@@ -1,41 +1,14 @@
 ---
-- name: Update nodes with OS pre-requisites
-  hosts: planet
-  gather_facts: no
-  strategy: free
-  tags: ['os-pre-req']
-  vars_files:
-  - ~/.apigee/credentials.yml
-  roles:
-  - { role: apigee-opdk-setup-default-settings, tags: ['cache'] }
-  - { role: apigee-opdk-ssh-user, tags: ['root'], user: 'root' }
-  - { role: apigee-opdk-setup-os-minimum }
-  - { role: apigee-opdk-setup-apigee-user}
-  - { role: apigee-opdk-setup-os-limits, tags: ['apigee-tuning'] }
-  - { role: apigee-opdk-setup-selinux-disable }
-  - { role: apigee-opdk-shutdown-iptables }
-  - { role: apigee-server-restart, tags: ['restart-server'], when: (selinux_disabled is defined and not selinux_disabled) or (iptables_disabled is defined and not iptables_disabled) }
-  - { role: apigee-opdk-setup-os-common }
-  - { role: apigee-opdk-setup-openjdk, tags: ['openjdk'], jdk_version: '1.8' }
+- name: Update cache for planet
+  include: apigee-planet-cache.yml
 
-- name: Install Postgres on DC-2
-  hosts: dc-2-pg
-  gather_facts: no
-  tags: ['os-pre-req']
-  roles:
-  - { role: apigee-opdk-enable-swap }
-  - { role: apigee-opdk-setup-os-postgres }
-  - { role: apigee-opdk-setup-postgres-config }
+- name: Install and configure OS pre-requisites
+  include: install-edge-os-pre-requisites.yml
 
-- name: Update apigee-pre-req for the planet
-  hosts: planet
-  gather_facts: no
-  strategy: free
-  tags: ['apigee-pre-req']
-  roles:
-  - { role: apigee-opdk-setup-java-home, tags: ['java_home'] }
-  - { role: apigee-opdk-setup-bootstrap, tags: ['apigee-bootstrap'] }
-  - { role: apigee-opdk-setup-silent-installation-config, tags: ['apigee-silent-config'], opdk_ldap_type: '2' }
+- name: Install and configure Apigee pre-requisites
+  include: apigee-pre-requisites.yml
+  vars:
+    opdk_ldap_type: 2
 
 - name: Configure Cassandra & Zookeeper in DC-2 and DC-1
   hosts: dc-2-ds, dc-1-ds
@@ -175,77 +148,77 @@
   - { role: apigee-opdk-setup-validate-cleanup }
 
 - name: Validate internal port connectivity
-  include: opdk-internal-port-connectivity-validator.yml
+  include: install-edge-region-validate-port-connectivity.yml
   tags: ['port-validator']
 
 - name: Download logs and configs from DC-1-DS
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-ds
 
 - name: Download logs and configs from DC-2-DS
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-2-ds
 
 - name: Download logs and configs from DC-1-MS
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-ms
 
 - name: Download logs and configs from DC-2-MS
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-2-ms
 
 - name: Download logs and configs from DC-1-RMP
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-rmp
 
 - name: Download logs and configs from DC-2-RMP
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-2-rmp
 
 - name: Download logs and configs from DC-1-QPID
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-qpid
 
 - name: Download logs and configs from DC-2-QPID
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-2-qpid
 
 - name: Download logs and configs from DC-1-PGMASTER
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-pgmaster
 
 - name: Download logs and configs from DC-2-PGMASTER
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-2-pgmaster
 
 - name: Download logs and configs from DC-1-PGSTANDBY
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-pgstandby
 
 - name: Download logs and configs from DC-2-PGSTANDBY
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-2-pgstandby

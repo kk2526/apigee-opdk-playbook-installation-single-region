@@ -1,16 +1,4 @@
 ---
-- name: Update apigee-pre-req for the planet
-  hosts: planet
-  gather_facts: no
-  tags: ['apigee-pre-req']
-  vars_files:
-  - ~/.apigee/credentials.yml
-  roles:
-  - { role: apigee-opdk-setup-default-settings, tags: ['cache'] }
-  - { role: apigee-opdk-setup-java-home, tags: ['java_home'] }
-  - { role: apigee-opdk-setup-bootstrap, tags: ['apigee-bootstrap'] }
-  - { role: apigee-opdk-setup-silent-installation-config, tags: ['apigee-silent-config'] }
-
 - name: Configure Cassandra & Zookeeper in DC-1
   hosts: dc-1-ds
   gather_facts: no
@@ -32,7 +20,7 @@
   - { role: apigee-opdk-setup-component, profile: 'ms',tags: ['apigee-component']  }
   - { role: apigee-opdk-setup-component, profile: 'ui',tags: ['apigee-component']  }
   - { role: apigee-opdk-start-components, tags: ['apigee-component'] }
-  - { role: apigee-opdk-server-self, server_types: ['ms'] }
+  - { role: apigee-opdk-server-self, server_types: ['ms'], tags: ['self'] }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
 - name: Setup RMP on DC-1
@@ -43,7 +31,7 @@
   - { role: apigee-opdk-setup-component-installer, tags: ['apigee-component', 'installer'] }
   - { role: apigee-opdk-setup-component, profile: 'rmp',tags: ['apigee-component']  }
   - { role: apigee-opdk-start-components, tags: ['apigee-component'] }
-  - { role: apigee-opdk-server-self, server_types: ['router', 'mp'] }
+  - { role: apigee-opdk-server-self, server_types: ['router', 'mp'], tags: ['self']  }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
 - name: Setup Qpid on DC-1
@@ -54,7 +42,7 @@
   - { role: apigee-opdk-setup-component-installer, tags: ['apigee-component', 'installer'] }
   - { role: apigee-opdk-setup-component, profile: 'qs',tags: ['apigee-component']  }
   - { role: apigee-opdk-start-components, tags: ['apigee-component'] }
-  - { role: apigee-opdk-server-self, server_types: ['qs'] }
+  - { role: apigee-opdk-server-self, server_types: ['qs'], tags: ['self']  }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
 - name: Install Postgres on DC-1
@@ -64,7 +52,7 @@
   tags: ['pg', 'pgcommon']
   roles:
   - { role: apigee-opdk-setup-component-installer, tags: ['apigee-component', 'installer'] }
-  - { role: apigee-opdk-setup-component, profile: 'ps',tags: ['apigee-component'] }
+  - { role: apigee-opdk-setup-component, profile: 'ps', tags: ['apigee-component'] }
   - { role: apigee-opdk-start-components, tags: ['apigee-component'] }
 
 - name: Configure Postgres Master on DC-1
@@ -73,7 +61,7 @@
   serial: 1
   tags: ['pg','pgmaster']
   roles:
-  - { role: apigee-opdk-server-self, server_types: ['ps'] }
+  - { role: apigee-opdk-server-self, server_types: ['ps'], tags: ['self']  }
   - { role: apigee-opdk-setup-postgres-master }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
@@ -83,7 +71,7 @@
   serial: 1
   tags: ['pg', 'pgstandby']
   roles:
-  - { role: apigee-opdk-server-self, server_types: ['ps'] }
+  - { role: apigee-opdk-server-self, server_types: ['ps'], tags: ['self']  }
   - { role: apigee-opdk-setup-postgres-standby }
   - { role: apigee-opdk-setup-status, tags: ['status'] }
 
@@ -106,41 +94,41 @@
   - { role: apigee-opdk-setup-validate-cleanup }
 
 - name: Validate internal port connectivity
-  include: opdk-internal-port-connectivity-validator.yml
+  include: install-edge-region-validate-port-connectivity.yml
   tags: ['port-validator']
 
 - name: Download logs and configs from DC-1-DS
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-ds
 
 - name: Download logs and configs from DC-1-MS
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-ms
 
 - name: Download logs and configs from DC-1-RMP
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-rmp
 
 - name: Download logs and configs from DC-1-QPID
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-qpid
 
 - name: Download logs and configs from DC-1-PGMASTER
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-pgmaster
 
 - name: Download logs and configs from DC-1-PGSTANDBY
-  include: opdk-setup-log-files.yml
+  include: apigee-log-config-files.yml
   tags: ['logs']
   vars:
     hosts: dc-1-pgstandby
