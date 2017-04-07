@@ -75,7 +75,7 @@
     debug:
       msg: "Upgrading component {{ upgrade_component }} on {{ inventory_hostname }} ( {{ ansible_hostname }} )"
   roles:
-  - { role: apigee-opdk-stop-components }
+  - { role: apigee-opdk-stop-components, component_name: 'apigee-postgresql' }
   - { role: apigee-opdk-setup-postgres-config, tags: ['os-pre-req'], clear_pgdata: True }
   - { role: apigee-opdk-update-component,  apigee_component: '{{ upgrade_component }}', validate_ready: false, ignore_errors: true }
   - { role: apigee-opdk-set-reachable, reachability: True, server_types: '{{ server_type_names }}' }
