@@ -3,7 +3,7 @@
   include: apigee-planet-cache.yml
 
 - name: Install and configure OS pre-requisites
-  include: install-edge-os-pre-requisites.yml
+  include: apigee-os-pre-requisites.yml
 
 - name: Install and configure Apigee pre-requisites
   include: apigee-pre-requisites.yml

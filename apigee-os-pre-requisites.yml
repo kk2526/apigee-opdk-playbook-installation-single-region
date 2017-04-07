@@ -23,7 +23,7 @@
   - { role: apigee-opdk-setup-os-common }
   - { role: apigee-opdk-setup-openjdk, tags: ['openjdk'], jdk_version: '1.8' }
 
-- name: Update Postgres nodes with OS pre-requisites
+- name: Update Postgres master nodes with OS pre-requisites
   hosts: pg
   gather_facts: no
   tags: ['os-pre-req', 'pg-os-pre-req']
@@ -31,3 +31,12 @@
   - { role: apigee-opdk-enable-swap, tags: ['os-pre-req'] }
   - { role: apigee-opdk-setup-os-postgres, tags: ['os-pre-req'] }
   - { role: apigee-opdk-setup-postgres-config, tags: ['os-pre-req'] }
+
+- name: Update Postgres standby nodes with OS pre-requisites
+  hosts: pgstandby
+  gather_facts: no
+  tags: ['os-pre-req', 'pg-os-pre-req']
+  roles:
+  - { role: apigee-opdk-enable-swap, tags: ['os-pre-req'] }
+  - { role: apigee-opdk-setup-os-postgres, tags: ['os-pre-req'] }
+  - { role: apigee-opdk-setup-postgres-config, tags: ['os-pre-req'], clear_pgdata: True }

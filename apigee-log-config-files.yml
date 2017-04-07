@@ -1,5 +1,5 @@
 ---
-- hosts: '{{ hosts }}'
+- hosts: "{{ hosts }}"
   gather_facts: no
   become: true
   strategy: free

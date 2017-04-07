@@ -1,4 +1,12 @@
 ---
+- name: Stop Postgres Components
+  hosts: pg
+  gather_facts: no
+  tags: ['pgstop']
+  roles:
+  - { role:  apigee-opdk-stop-components, component_name: 'edge-postgres-server' }
+  - { role:  apigee-opdk-stop-components, component_name: 'apigee-postgresql' }
+
 - name: Stop Qpid components
   hosts: qpid
   gather_facts: no
@@ -67,6 +75,8 @@
     debug:
       msg: "Upgrading component {{ upgrade_component }} on {{ inventory_hostname }} ( {{ ansible_hostname }} )"
   roles:
+  - { role: apigee-opdk-stop-components }
+  - { role: apigee-opdk-setup-postgres-config, tags: ['os-pre-req'], clear_pgdata: True }
   - { role: apigee-opdk-update-component,  apigee_component: '{{ upgrade_component }}', validate_ready: false, ignore_errors: true }
   - { role: apigee-opdk-set-reachable, reachability: True, server_types: '{{ server_type_names }}' }
 
@@ -85,34 +95,21 @@
   - name: Validate this is postgresql master
     shell: "{{ apigee_service }} apigee-postgresql postgres-check-master"
 
-- name: Validate that PG Standby is standby
+- name: Setup and Validate that PG Standby is standby
   hosts: pgstandby
   tags: ['pgstandby_validate']
-  serial: 1
   gather_facts: no
+  serial: 1
   vars:
     cwc_properties:
     - { key: conf_postgresql_max_wal_senders, value: '3', file_name: 'postgresql' }
     - { key: conf_postgresql_wal_keep_segments, value: '500', file_name: 'postgresql' }
-  tasks:
-  - name: Validate this is postgresql standby
-    shell: "{{ apigee_service }} apigee-postgresql postgres-check-standby"
-
-#- name: Setup and Validate that PG Standby is standby
-#  hosts: pgstandby
-#  tags: ['pgstandby_validate']
-#  gather_facts: no
-#  serial: 1
-#  vars:
-#    cwc_properties:
-#    - { key: conf_postgresql_max_wal_senders, value: '3', file_name: 'postgresql' }
-#    - { key: conf_postgresql_wal_keep_segments, value: '500', file_name: 'postgresql' }
-#  roles:
-#  - { role: apigee-opdk-setup-postgres-standby }
-#  - { role: apigee-opdk-cwc-update, when: update_max_wal_settings is defined and update_max_wal_settings }
-#  - { role: apigee-opdk-stop-components, tags: ['stop'], when: update_max_wal_settings is defined and update_max_wal_settings  }
-#  - { role: apigee-opdk-start-components, tags: ['start'],  when: update_max_wal_settings is defined and update_max_wal_settings }
-#  - { role: apigee-opdk-setup-postgres-standby, when: update_max_wal_settings is defined and update_max_wal_settings }
+  roles:
+  - { role: apigee-opdk-setup-postgres-standby }
+  - { role: apigee-opdk-cwc-update, when: update_max_wal_settings is defined and update_max_wal_settings }
+  - { role: apigee-opdk-stop-components, tags: ['stop'], when: update_max_wal_settings is defined and update_max_wal_settings  }
+  - { role: apigee-opdk-start-components, tags: ['start'],  when: update_max_wal_settings is defined and update_max_wal_settings }
+  - { role: apigee-opdk-setup-postgres-standby, when: update_max_wal_settings is defined and update_max_wal_settings }
 
 - name: Upgrade PG with edge for remaining components
   hosts: pg
@@ -126,4 +123,4 @@
     debug:
       msg: "Upgrading component {{ upgrade_component }} on {{ inventory_hostname }} ( {{ ansible_hostname }} )"
   roles:
-  - { role: apigee-opdk-update-component,  apigee_component: '{{ upgrade_component }}' }
+  - { role: apigee-opdk-update-component,  apigee_component: '{{ upgrade_component }}', validate_ready: false, ignore_errors: true  }
