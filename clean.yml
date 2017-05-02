@@ -8,6 +8,7 @@
     - '~/.ansible/tmp/logs'
     - '~/.apigee/ssh_keys'
     - '~/.apigee/logs_configs'
+    - '~/.ansible/roles'
   tasks:
   - name: Clean folders
     ignore_errors: yes
