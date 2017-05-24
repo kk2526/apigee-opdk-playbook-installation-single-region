@@ -100,3 +100,5 @@
 - src: https://github.com/carlosfrias/apigee-opdk-setup-postgresql-add.git
 
 - src: https://github.com/carlosfrias/apigee-server-restart
+
+- src: https://github.com/kk2526/apigee-restart-edge-router
