@@ -1,15 +1,15 @@
 [dc-1]
 # Listing of all nodes in data center 1 (dc-1)
-node1  ansible_ssh_host=34.202.159.177    ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
-node2  ansible_ssh_host=52.91.125.20      ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
-node3  ansible_ssh_host=52.86.255.199     ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
+node1  ansible_ssh_host=$IP1    ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
+node2  ansible_ssh_host=$IP2      ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
+node3  ansible_ssh_host=$IP3     ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
 
 # Listing that references all data centers that compose a planet.
 [planet]
 
-node1 ansible_ssh_host=34.202.159.177    ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
-node2 ansible_ssh_host=52.91.125.20      ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
-node3 ansible_ssh_host=52.86.255.199     ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
+node1  ansible_ssh_host=$IP1    ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
+node2  ansible_ssh_host=$IP2      ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
+node3  ansible_ssh_host=$IP3     ansible_user='root' ansible_ssh_private_key_file='~/.apigee/ec2.pem'
 
 
 [ds:children]
